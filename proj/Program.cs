@@ -4,68 +4,124 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Shop
+namespace Work
 {
-    class Interface
+    internal class Program
     {
-        protected string shop_name = "IKEA";
-        protected string shop_adress = "shop adress";
-        protected string shop_description = "Furnitures, bathroom vanities, etc.";
-        protected string shop_contact_number = "+12 345 678 910";
-        protected string shop_contact_email = "ikea@gmail.com";
+        public class Employee
+        {
 
-        string get_name()
-        {
-            return shop_name;
-        }
-        string get_adress()
-        {
-            return shop_adress;
-        }
-        string get_desc()
-        {
-            return shop_description;
-        }
-        string get_number()
-        {
-            return shop_contact_number;
-        }
-        string get_email()
-        {
-            return shop_contact_email;
-        }
-        public void display_name()
-        {
-            Console.WriteLine(get_name());
-        }
+            private string fullName;
+            private DateTime birthDate;
+            private string phoneNumber;
+            private string workEmail;
+            private string position;
+            private string jobDescription;
 
-        public void display_adress()
-        {
-            Console.WriteLine(get_adress());
-        }
 
-        public void display_desc()
-        {
-            Console.WriteLine(get_desc());
-        }
-        public void display_number()
-        {
-            Console.WriteLine(get_number());
-        }
-        public void display_email()
-        {
-            Console.WriteLine(get_email());
+            public Employee() { }
+
+
+            public Employee(string fullName, DateTime birthDate, string phoneNumber, string workEmail, string position, string jobDescription)
+            {
+                this.fullName = fullName;
+                this.birthDate = birthDate;
+                this.phoneNumber = phoneNumber;
+                this.workEmail = workEmail;
+                this.position = position;
+                this.jobDescription = jobDescription;
+            }
+
+
+            public void SetFullName(string fullName)
+            {
+                this.fullName = fullName;
+            }
+
+            public void SetBirthDate(DateTime birthDate)
+            {
+                this.birthDate = birthDate;
+            }
+
+            public void SetPhoneNumber(string phoneNumber)
+            {
+                this.phoneNumber = phoneNumber;
+            }
+
+            public void SetWorkEmail(string workEmail)
+            {
+                this.workEmail = workEmail;
+            }
+
+            public void SetPosition(string position)
+            {
+                this.position = position;
+            }
+
+            public void SetJobDescription(string jobDescription)
+            {
+                this.jobDescription = jobDescription;
+            }
+
+
+            public string GetFullName()
+            {
+                return fullName;
+            }
+
+            public DateTime GetBirthDate()
+            {
+                return birthDate;
+            }
+
+            public string GetPhoneNumber()
+            {
+                return phoneNumber;
+            }
+
+            public string GetWorkEmail()
+            {
+                return workEmail;
+            }
+
+            public string GetPosition()
+            {
+                return position;
+            }
+
+            public string GetJobDescription()
+            {
+                return jobDescription;
+            }
+
+
+            public void PrintInfo()
+            {
+                Console.WriteLine($"ФИО: {fullName}");
+                Console.WriteLine($"Дата рождения: {birthDate.ToShortDateString()}");
+                Console.WriteLine($"Телефон: {phoneNumber}");
+                Console.WriteLine($"Рабочий Email: {workEmail}");
+                Console.WriteLine($"Должность: {position}");
+                Console.WriteLine($"Описание обязанностей: {jobDescription}");
+            }
+
         }
         static void Main(string[] args)
         {
-            Interface shop = new Interface();
 
-            shop.display_name();
-            shop.display_adress();
-            shop.display_desc();
-            shop.display_number();
-            shop.display_email();
+            Employee emp = new Employee("Иванов Иван Иванович", new DateTime(1985, 5, 20), "89001234567", "ivanov@company.com", "Менеджер", "Управление командой");
 
+
+            emp.PrintInfo();
+
+            emp.SetPosition("Старший менеджер");
+            emp.SetJobDescription("Управление проектами и командой");
+
+            emp.PrintInfo();
+
+            Console.WriteLine("Нажмите любую клавишу для выхода...");
+            Console.ReadKey();
         }
     }
 }
+
