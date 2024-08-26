@@ -1,124 +1,80 @@
 ﻿using System;
-
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 
 namespace Work
 {
     internal class Program
     {
-        public class Employee
+        public enum DayType { Morning, AllDay, Evening }
+
+        public class Dish : IComparable<Dish>
         {
+            public string Title { get; set; }
 
-            private string fullName;
-            private DateTime birthDate;
-            private string phoneNumber;
-            private string workEmail;
-            private string position;
-            private string jobDescription;
+            public double Price { get; set; }
 
+            public DayType DayTypes { get; set; }
 
-            public Employee() { }
-
-
-            public Employee(string fullName, DateTime birthDate, string phoneNumber, string workEmail, string position, string jobDescription)
+            public override string ToString()
             {
-                this.fullName = fullName;
-                this.birthDate = birthDate;
-                this.phoneNumber = phoneNumber;
-                this.workEmail = workEmail;
-                this.position = position;
-                this.jobDescription = jobDescription;
+                return $"Title: {Title}, Day: {DayTypes}, Price: {Price}";
             }
 
-
-            public void SetFullName(string fullName)
+            public int CompareTo(Dish other)
             {
-                this.fullName = fullName;
+                if (other == null) return 0;
+                return this.Title.CompareTo(other.Title);
             }
-
-            public void SetBirthDate(DateTime birthDate)
+            public static PriceCompare SortDish
             {
-                this.birthDate = birthDate;
+                get { return new PriceCompare(); }
+
             }
-
-            public void SetPhoneNumber(string phoneNumber)
-            {
-                this.phoneNumber = phoneNumber;
-            }
-
-            public void SetWorkEmail(string workEmail)
-            {
-                this.workEmail = workEmail;
-            }
-
-            public void SetPosition(string position)
-            {
-                this.position = position;
-            }
-
-            public void SetJobDescription(string jobDescription)
-            {
-                this.jobDescription = jobDescription;
-            }
-
-
-            public string GetFullName()
-            {
-                return fullName;
-            }
-
-            public DateTime GetBirthDate()
-            {
-                return birthDate;
-            }
-
-            public string GetPhoneNumber()
-            {
-                return phoneNumber;
-            }
-
-            public string GetWorkEmail()
-            {
-                return workEmail;
-            }
-
-            public string GetPosition()
-            {
-                return position;
-            }
-
-            public string GetJobDescription()
-            {
-                return jobDescription;
-            }
-
-
-            public void PrintInfo()
-            {
-                Console.WriteLine($"ФИО: {fullName}");
-                Console.WriteLine($"Дата рождения: {birthDate.ToShortDateString()}");
-                Console.WriteLine($"Телефон: {phoneNumber}");
-                Console.WriteLine($"Рабочий Email: {workEmail}");
-                Console.WriteLine($"Должность: {position}");
-                Console.WriteLine($"Описание обязанностей: {jobDescription}");
-            }
-
         }
+
+        public class PriceCompare : IComparer<Dish>
+        {
+            public int Compare(Dish? x, Dish? y)
+            {
+                if (x == null && y == null) return 0;
+                if (x == null) return -1;
+                if (y == null) return 1;
+
+                return -x.Price.CompareTo(y.Price);
+            }
+        }
+
         static void Main(string[] args)
         {
+            Dish[] dishes = new Dish[]
+            {
+                new Dish
+                {
+                    Title = "Coffee", DayTypes = DayType.Morning, Price = 2.00
+                },
 
-            Employee emp = new Employee("Иванов Иван Иванович", new DateTime(1985, 5, 20), "89001234567", "ivanov@company.com", "Менеджер", "Управление командой");
+                new Dish
+                {
+                    Title = "Tea", DayTypes = DayType.AllDay, Price = 1.50
+                }
+            };
 
+            Array.Sort(dishes);
 
-            emp.PrintInfo();
+            foreach (var dish in dishes)
+            {
+                Console.WriteLine(dish);
+            }
 
-            emp.SetPosition("Старший менеджер");
-            emp.SetJobDescription("Управление проектами и командой");
+            Array.Sort(dishes, Dish.SortDish);
 
-            emp.PrintInfo();
-
-            Console.WriteLine("Нажмите любую клавишу для выхода...");
-            Console.ReadKey();
+            foreach (var dish in dishes)
+            {
+                Console.WriteLine(dish);
+            }
         }
     }
 }
-
