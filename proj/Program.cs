@@ -1,80 +1,49 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Work
+﻿namespace DeliveryCostCalculator
 {
-    internal class Program
+    using System;
+
+    // Делегат для обчислення вартості доставки
+    public delegate double DeliveryCostDelegate(double weight, double distance, string deliveryType, double volume);
+
+    public class Program
     {
-        public enum DayType { Morning, AllDay, Evening }
-
-        public class Dish : IComparable<Dish>
+        public static void Main()
         {
-            public string Title { get; set; }
+            // Приклад даних
+            double weight = 25.0;   // вага в кг
+            double distance = 100.0; // відстань в км
+            string deliveryType = "standard"; // тип доставки
+            double volume = 30.0;    // об'єм у кубічних метрах
 
-            public double Price { get; set; }
-
-            public DayType DayTypes { get; set; }
-
-            public override string ToString()
+            // Делегати для різних типів доставки через лямбда-вирази
+            DeliveryCostDelegate standardCostDelegate = (w, d, t, v) =>
             {
-                return $"Title: {Title}, Day: {DayTypes}, Price: {Price}";
-            }
-
-            public int CompareTo(Dish other)
+                double baseCost = w * d * 0.5;
+                double multiplier = t == "express" ? 1.5 : 1.0;
+                return baseCost * multiplier;
+            };
+            DeliveryCostDelegate discountedCostDelegate = (w, d, t, v) =>
             {
-                if (other == null) return 0;
-                return this.Title.CompareTo(other.Title);
-            }
-            public static PriceCompare SortDish
+                double baseCost = w * d * 0.5;
+                double discount = t == "discounted" ? 0.5 : 1.0;
+                return baseCost * discount;
+            };
+            DeliveryCostDelegate volumeCostDelegate = (w, d, t, v) =>
             {
-                get { return new PriceCompare(); }
-
-            }
-        }
-
-        public class PriceCompare : IComparer<Dish>
-        {
-            public int Compare(Dish? x, Dish? y)
-            {
-                if (x == null && y == null) return 0;
-                if (x == null) return -1;
-                if (y == null) return 1;
-
-                return -x.Price.CompareTo(y.Price);
-            }
-        }
-
-        static void Main(string[] args)
-        {
-            Dish[] dishes = new Dish[]
-            {
-                new Dish
-                {
-                    Title = "Coffee", DayTypes = DayType.Morning, Price = 2.00
-                },
-
-                new Dish
-                {
-                    Title = "Tea", DayTypes = DayType.AllDay, Price = 1.50
-                }
+                double baseCost = w * d * 0.5;
+                double volumeCost = v * 2.0;
+                return baseCost + volumeCost;
             };
 
-            Array.Sort(dishes);
+            // Виклик методів через делегати
+            double standardCost = standardCostDelegate(weight, distance, deliveryType, volume);
+            double discountedCost = discountedCostDelegate(weight, distance, deliveryType, volume);
+            double volumeBasedCost = volumeCostDelegate(weight, distance, deliveryType, volume);
 
-            foreach (var dish in dishes)
-            {
-                Console.WriteLine(dish);
-            }
-
-            Array.Sort(dishes, Dish.SortDish);
-
-            foreach (var dish in dishes)
-            {
-                Console.WriteLine(dish);
-            }
+            // Виведення результату
+            Console.WriteLine($"The total delivery cost for standard delivery is: {standardCost}");
+            Console.WriteLine($"The total delivery cost for discounted delivery is: {discountedCost}");
+            Console.WriteLine($"The total delivery cost for volume-based delivery is: {volumeBasedCost}");
         }
     }
 }
