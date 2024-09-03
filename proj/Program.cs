@@ -1,102 +1,115 @@
 ﻿using System;
 
-namespace RefTypeValueType
+namespace Homework
 {
-    internal class Drob
+    internal class Interface
     {
-        public int Ch { get; set; }
-        int zn;
-        public int Zn
+        public abstract class Animal
         {
-            get { return zn; }
-            set
+            protected string Name { get; set; }
+            protected string Species { get; set; }
+
+            public Animal(string name, string species)
             {
-                if (value == 0)
-                    throw new DivideByZeroException();
-                else
-                    zn = value;
+                Name = name;
+                Species = species;
+            }
+
+            public void Describe()
+            {
+                Console.WriteLine($"{Species} has name {Name}");
+            }
+        };
+
+        public interface ISwim
+        {
+            void Swim();
+        }
+
+        public interface IFly
+        {
+            void Fly();
+        }
+
+        public interface IHunt
+        {
+            void Hunt();
+        }
+        public class Shark : Animal, ISwim, IHunt
+        {
+            public Shark(string name) : base(name, "Shark") { }
+
+            public void Swim()
+            {
+                Console.WriteLine($"{Name} swimming.");
+            }
+
+            public void Hunt()
+            {
+                Console.WriteLine($"{Name} hunting.");
             }
         }
 
-        public override string ToString()
+        public class Eagle : Animal, IFly, IHunt
         {
-            return Ch.ToString() + "/" + Zn.ToString();
+            public Eagle(string name) : base(name, "Eagle") { }
+
+            public void Fly()
+            {
+                Console.WriteLine($"{Name} flying.");
+            }
+
+            public void Hunt()
+            {
+                Console.WriteLine($"{Name} hunting.");
+            }
         }
 
-        public Drob()
+        public class Penguin : Animal, ISwim
         {
-            Ch = 1; zn = 1;
-        }
+            public Penguin(string name) : base(name, "Penguin") { }
 
-        public Drob(int ch, int zn)
-        {
-            this.Ch = ch; this.Zn = zn;
-        }
+            public void Swim()
+            {
+                Console.WriteLine($"{Name} swimming.");
+            }
 
-
-        public static Drob operator *(Drob a, Drob b)
-        {
-            return new Drob(a.Ch * b.Ch, a.Zn * b.Zn);
-        }
-
-
-        public static Drob operator +(Drob a, Drob b)
-        {
-            int newCh = a.Ch * b.Zn + b.Ch * a.Zn;
-            int newZn = a.Zn * b.Zn;
-            return new Drob(newCh, newZn);
-        }
-
-
-        public static Drob operator /(Drob a, Drob b)
-        {
-            if (b.Ch == 0)
-                throw new DivideByZeroException();
-            return new Drob(a.Ch * b.Zn, a.Zn * b.Ch);
-        }
-
-        public static bool operator >=(Drob a, Drob b)
-        {
-            return (a.Ch * b.Zn) >= (b.Ch * a.Zn);
-        }
-
-
-        public static bool operator <=(Drob a, Drob b)
-        {
-            return (a.Ch * b.Zn) <= (b.Ch * a.Zn);
         }
 
 
         static void Main(string[] args)
         {
-            try
+            Animal[] animals =
             {
-                Drob drob1 = new Drob(1, 2);
-                Console.WriteLine(drob1);
+                new Shark("Grigoriy"),
+                new Eagle("Vasya"),
+                new Penguin("Petya")
+            };
 
-                Drob drob2 = new Drob(2, 3);
-                Console.WriteLine(drob2);
-
-                Drob drob3 = drob1 * drob2;
-                Console.WriteLine("Multiplication: " + drob3);
-
-                Drob drob4 = drob1 + drob2;
-                Console.WriteLine("Addition: " + drob4);
-
-                Drob drob5 = drob1 / drob2;
-                Console.WriteLine("Division: " + drob5);
-
-                Console.WriteLine("drob1 >= drob2: " + (drob1 >= drob2));
-                Console.WriteLine("drob1 <= drob2: " + (drob1 <= drob2));
-            }
-            catch (DivideByZeroException ex)
+            foreach (var animal in animals)
             {
-                Console.WriteLine(ex.ToString());
+                animal.Describe();
+
+                if (animal is ISwim swimmer)
+                {
+                    swimmer.Swim();
+                }
+
+                if (animal is IFly flyer)
+                {
+                    flyer.Fly();
+                }
+
+                if (animal is IHunt hunter)
+                {
+                    hunter.Hunt();
+                }
+
+                Console.WriteLine();
             }
-            catch (Exception ex)
-            {
-                Console.WriteLine(ex.ToString());
-            }
+
+
         }
     }
+            
 }
